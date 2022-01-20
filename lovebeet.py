@@ -2,32 +2,27 @@ import cv2
 import numpy as np
 
 def draw(scale, width, div, grad1, color1, color2, color3, lines, angle, pad, grad2, color4, color5):
-    x1_ = __draw1(
-        scale, 
-        width, 
-        div,
-        grad1,
-        color1,
-        color2,
-        color3)
-    x2_ = __draw2(
-        x1_, 
-        lines)
-    x3_ = __draw3(
-        x2_, 
-        angle)
-    x4_ = __draw4(
-        x3_, 
-        scale,
-        pad,
-        grad2,
-        color4,
-        color5)
-    return x4_
+    assert scale > 0 and scale%2 == 1
+    assert 0 < width
+    assert 0 < div
+    assert 0 <= grad1 <= 100
+    assert 0 <= color1[0] <=255 and 0 <= color1[1] <=255 and 0 <= color1[2] <=255 
+    assert 0 <= color2[0] <=255 and 0 <= color2[1] <=255 and 0 <= color2[2] <=255 
+    assert 0 <= color3[0] <=255 and 0 <= color3[1] <=255 and 0 <= color3[2] <=255 
+    assert 0 < lines
+    assert 0 <= angle < 360
+    assert 0 <= pad
+    assert 0 <= grad2 <= 100
+    assert 0 <= color4[0] <=255 and 0 <= color4[1] <=255 and 0 <= color4[2] <=255 
+    assert 0 <= color5[0] <=255 and 0 <= color5[1] <=255 and 0 <= color5[2] <=255 
+
+    x = __draw1(scale, width, div, grad1, color1, color2, color3)
+    x = __draw2(x, lines)
+    x = __draw3(x, angle)
+    x = __draw4(x, scale, pad, grad2, color4, color5)
+    return x
 
 def __draw1(scale, width, div, grad_s, color1, color2, color3):
-    assert div >= 1
-
     width = width*scale
 
     grad_s = (grad_s*width) // 100
@@ -58,8 +53,6 @@ def __draw1(scale, width, div, grad_s, color1, color2, color3):
     return x
 
 def __draw2(x, lines):
-    assert lines >= 1
-
     width = x.shape[1]
 
     pos = np.arange(width)
