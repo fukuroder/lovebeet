@@ -86,7 +86,7 @@ class Application(tk.Tk):
         self.b3.set(d["foreground"]["blue3"])
         self.width.set(d["foreground"]["width"])
         self.div.set(d["foreground"]["division"])
-        self.grad1.set(d["foreground"]["gradiation1"])
+        self.grad1.set(d["foreground"]["gradation1"])
         self.lines.set(d["foreground"]["lines"])
         self.angle.set(d["foreground"]["angle"])
         
@@ -96,7 +96,7 @@ class Application(tk.Tk):
         self.r5.set(d["background"]["red5"])
         self.g5.set(d["background"]["green5"])
         self.b5.set(d["background"]["blue5"])
-        self.grad2.set(d["background"]["gradiation2"])
+        self.grad2.set(d["background"]["gradation2"])
         self.pad.set(d["background"]["padding"])
         self.q.set(2)
         self.active_ = True
@@ -121,7 +121,7 @@ class Application(tk.Tk):
                 "blue3": self.b3.get(),
                 "width": self.width.get(),
                 "division": self.div.get(),
-                "gradiation1": self.grad1.get(),
+                "gradation1": self.grad1.get(),
                 "lines": self.lines.get(),
                 "angle": self.angle.get(),
             },
@@ -132,7 +132,7 @@ class Application(tk.Tk):
                 "red5": self.r5.get(),
                 "green5": self.g5.get(),
                 "blue5": self.b5.get(),
-                "gradiation2": self.grad2.get(),
+                "gradation2": self.grad2.get(),
                 "padding": self.pad.get(),
             },
         }
@@ -156,7 +156,7 @@ class Application(tk.Tk):
         "blue3": 0,
         "width": 512,
         "division": 32,
-        "gradiation1": 0,
+        "gradation1": 0,
         "lines": 6,
         "angle": 0
     },
@@ -167,7 +167,7 @@ class Application(tk.Tk):
         "red5": 255,
         "green5": 255,
         "blue5": 0,
-        "gradiation2": 100,
+        "gradation2": 100,
         "padding": 25
     }
 }"""
@@ -188,7 +188,7 @@ class Application(tk.Tk):
         "blue3": 0,
         "width": 400,
         "division": 40,
-        "gradiation1": 0,
+        "gradation1": 0,
         "lines": 1,
         "angle": 315
     },
@@ -199,7 +199,7 @@ class Application(tk.Tk):
         "red5": 255,
         "green5": 255,
         "blue5": 255,
-        "gradiation2": 0,
+        "gradation2": 0,
         "padding": 20
     }
 }"""
