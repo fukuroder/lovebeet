@@ -5,6 +5,7 @@ import json
 import lovebeet
 import time
 
+
 class Application(tk.Tk):
     def __init__(self):
         super().__init__()
@@ -16,8 +17,8 @@ class Application(tk.Tk):
 
         scale = 1
         self.x4_ = lovebeet.draw(
-            scale, 
-            self.width.get(), 
+            scale,
+            self.width.get(),
             self.div.get(),
             self.grad1.get(),
             (self.r1.get(), self.g1.get(), self.b1.get()),
@@ -38,8 +39,8 @@ class Application(tk.Tk):
 
         scale = self.q.get()*2 + 1
         self.x4_ = lovebeet.draw(
-            scale, 
-            self.width.get(), 
+            scale,
+            self.width.get(),
             self.div.get(),
             self.grad1.get(),
             (self.r1.get(), self.g1.get(), self.b1.get()),
@@ -59,12 +60,14 @@ class Application(tk.Tk):
 
     def save_image(self):
         self.update2()
-        filename = filedialog.asksaveasfilename(filetypes=[("image file", "*.png;*.webp;*.jpg;*.bmp")])
+        filename = filedialog.asksaveasfilename(
+            filetypes=[("image file", "*.png;*.webp;*.jpg;*.bmp")])
         if filename:
             Image.fromarray(self.x4_).save(filename)
 
     def load_setting(self):
-        filename = filedialog.askopenfilename(filetypes=[("JSON", "*.json")], defaultextension="json")
+        filename = filedialog.askopenfilename(
+            filetypes=[("JSON", "*.json")], defaultextension="json")
         if not filename:
             return
 
@@ -89,7 +92,7 @@ class Application(tk.Tk):
         self.grad1.set(d["foreground"]["gradation1"])
         self.lines.set(d["foreground"]["lines"])
         self.angle.set(d["foreground"]["angle"])
-        
+
         self.r4.set(d["background"]["red4"])
         self.g4.set(d["background"]["green4"])
         self.b4.set(d["background"]["blue4"])
@@ -102,14 +105,14 @@ class Application(tk.Tk):
         self.active_ = True
         self.update2()
 
-
-    def save_setting(self):    
-        filename = filedialog.asksaveasfilename(filetypes=[("JSON", "*.json")], defaultextension="json")
+    def save_setting(self):
+        filename = filedialog.asksaveasfilename(
+            filetypes=[("JSON", "*.json")], defaultextension="json")
         if not filename:
             return
 
         d = {
-            "foreground":{ 
+            "foreground": {
                 "red1": self.r1.get(),
                 "green1": self.g1.get(),
                 "blue1": self.b1.get(),
@@ -125,7 +128,7 @@ class Application(tk.Tk):
                 "lines": self.lines.get(),
                 "angle": self.angle.get(),
             },
-            "background":{
+            "background": {
                 "red4": self.r4.get(),
                 "green4": self.g4.get(),
                 "blue4": self.b4.get(),
@@ -136,14 +139,13 @@ class Application(tk.Tk):
                 "padding": self.pad.get(),
             },
         }
-        
+
         with open(filename, "w") as f:
             json.dump(d, f, indent=4)
 
-
     def preset1(self):
         j = \
-"""{
+            """{
     "foreground": {
         "red1": 255,
         "green1": 255,
@@ -171,11 +173,11 @@ class Application(tk.Tk):
         "padding": 25
     }
 }"""
-        self.update_all( json.loads(j) )
+        self.update_all(json.loads(j))
 
     def preset2(self):
         j = \
-"""{
+            """{
     "foreground": {
         "red1": 255,
         "green1": 0,
@@ -203,8 +205,7 @@ class Application(tk.Tk):
         "padding": 20
     }
 }"""
-        self.update_all( json.loads(j) )
-
+        self.update_all(json.loads(j))
 
     def create_widgets(self):
         self.title("LOVEBEET")
@@ -222,7 +223,7 @@ class Application(tk.Tk):
         menu1.add_separator()
         menu1.add_command(label="Save Image", command=self.save_image)
         menu1.add_separator()
-        menu1.add_command(label="Quit", command=self.quit) 
+        menu1.add_command(label="Quit", command=self.quit)
         menu.add_cascade(label="File", menu=menu1)
 
         menu2 = tk.Menu(menu, tearoff=0)
@@ -231,112 +232,113 @@ class Application(tk.Tk):
         menu.add_cascade(label="Preset", menu=menu2)
 
         self.config(menu=menu)
-        
+
         sub1 = tk.LabelFrame(self, text="foreground")
         sub1.pack(padx=10, pady=10, anchor="w")
 
         self.r1 = tk.IntVar()
         tk.Scale(sub1, from_=0, to=255, length=100, variable=self.r1, label="red1", orient=tk.HORIZONTAL, command=self.update1) \
-        .grid(row=0, column=0)
+            .grid(row=0, column=0)
 
         self.g1 = tk.IntVar()
         tk.Scale(sub1, from_=0, to=255, length=100, variable=self.g1, label="green1", orient=tk.HORIZONTAL, command=self.update1) \
-        .grid(row=0, column=1)
-        
+            .grid(row=0, column=1)
+
         self.b1 = tk.IntVar()
         tk.Scale(sub1, from_=0, to=255, length=100, variable=self.b1, label="blue1", orient=tk.HORIZONTAL, command=self.update1) \
-        .grid(row=0, column=2)
+            .grid(row=0, column=2)
 
         self.r2 = tk.IntVar()
         tk.Scale(sub1, from_=0, to=255, length=100, variable=self.r2, label="red2", orient=tk.HORIZONTAL, command=self.update1) \
-        .grid(row=1, column=0)
+            .grid(row=1, column=0)
 
         self.g2 = tk.IntVar()
         tk.Scale(sub1, from_=0, to=255, length=100, variable=self.g2, label="green2", orient=tk.HORIZONTAL, command=self.update1) \
-        .grid(row=1, column=1)
+            .grid(row=1, column=1)
 
         self.b2 = tk.IntVar()
         tk.Scale(sub1, from_=0, to=255, length=100, variable=self.b2, label="blue2", orient=tk.HORIZONTAL, command=self.update1) \
-        .grid(row=1, column=2)
+            .grid(row=1, column=2)
 
         self.r3 = tk.IntVar()
         tk.Scale(sub1, from_=0, to=255, length=100, variable=self.r3, label="red3", orient=tk.HORIZONTAL, command=self.update1) \
-        .grid(row=2, column=0)
+            .grid(row=2, column=0)
 
         self.g3 = tk.IntVar()
         tk.Scale(sub1, from_=0, to=255, length=100, variable=self.g3, label="green3", orient=tk.HORIZONTAL, command=self.update1) \
-        .grid(row=2, column=1)
+            .grid(row=2, column=1)
 
         self.b3 = tk.IntVar()
         tk.Scale(sub1, from_=0, to=255, length=100, variable=self.b3, label="blue3", orient=tk.HORIZONTAL, command=self.update1) \
-        .grid(row=2, column=2)
+            .grid(row=2, column=2)
 
         self.width = tk.IntVar()
         tk.Scale(sub1, from_=0, to=1000, length=100, variable=self.width, label="width", orient=tk.HORIZONTAL, command=self.update1) \
-        .grid(row=3, column=0)
+            .grid(row=3, column=0)
 
         self.div = tk.IntVar()
         tk.Scale(sub1, from_=1, to=100, length=100, variable=self.div, label="division", orient=tk.HORIZONTAL, command=self.update1) \
-        .grid(row=3, column=1)
-        
+            .grid(row=3, column=1)
+
         self.grad1 = tk.IntVar()
         tk.Scale(sub1, from_=0, to=100, length=100, variable=self.grad1, label="gradation1", orient=tk.HORIZONTAL, command=self.update1) \
-        .grid(row=3, column=2)
+            .grid(row=3, column=2)
 
         self.lines = tk.IntVar()
         tk.Scale(sub1, from_=1, to=100, length=100, variable=self.lines, label="lines", orient=tk.HORIZONTAL, command=self.update1) \
-        .grid(row=4, column=0)
+            .grid(row=4, column=0)
 
         self.angle = tk.IntVar()
         tk.Scale(sub1, from_=0, to=359, length=100, variable=self.angle, label="angle", orient=tk.HORIZONTAL, command=self.update1) \
-        .grid(row=4, column=1)
+            .grid(row=4, column=1)
 
         sub4 = tk.LabelFrame(self, text="background")
         sub4.pack(padx=10, pady=10, anchor="w")
 
         self.r4 = tk.IntVar()
         tk.Scale(sub4, from_=0, to=255, length=100, variable=self.r4, label="red4", orient=tk.HORIZONTAL, command=self.update1) \
-        .grid(row=0, column=0)
+            .grid(row=0, column=0)
 
         self.g4 = tk.IntVar()
         tk.Scale(sub4, from_=0, to=255, length=100, variable=self.g4, label="green4", orient=tk.HORIZONTAL, command=self.update1) \
-        .grid(row=0, column=1)
+            .grid(row=0, column=1)
 
         self.b4 = tk.IntVar()
         tk.Scale(sub4, from_=0, to=255, length=100, variable=self.b4, label="blue4", orient=tk.HORIZONTAL, command=self.update1) \
-        .grid(row=0, column=2)
+            .grid(row=0, column=2)
 
         self.r5 = tk.IntVar()
         tk.Scale(sub4, from_=0, to=255, length=100, variable=self.r5, label="red5", orient=tk.HORIZONTAL, command=self.update1) \
-        .grid(row=1, column=0)
+            .grid(row=1, column=0)
 
         self.g5 = tk.IntVar()
         tk.Scale(sub4, from_=0, to=255, length=100, variable=self.g5, label="green5", orient=tk.HORIZONTAL, command=self.update1) \
-        .grid(row=1, column=1)
+            .grid(row=1, column=1)
 
         self.b5 = tk.IntVar()
         tk.Scale(sub4, from_=0, to=255, length=100, variable=self.b5, label="blue5", orient=tk.HORIZONTAL, command=self.update1) \
-        .grid(row=1, column=2)
+            .grid(row=1, column=2)
 
         self.grad2 = tk.IntVar()
         tk.Scale(sub4, from_=0, to=100, length=100, variable=self.grad2, label="gradation2", orient=tk.HORIZONTAL, command=self.update1) \
-        .grid(row=2, column=0)
+            .grid(row=2, column=0)
 
         self.pad = tk.IntVar()
         tk.Scale(sub4, from_=0, to=100, length=100, variable=self.pad, label="padding", orient=tk.HORIZONTAL, command=self.update1) \
-        .grid(row=2, column=1)
+            .grid(row=2, column=1)
 
         sub5 = tk.LabelFrame(self, text="quality")
         sub5.pack(padx=10, pady=10, anchor="w")
 
         self.q = tk.IntVar()
         tk.Scale(sub5, from_=0, to=5, length=100, variable=self.q, orient=tk.HORIZONTAL) \
-        .grid(row=0,column=0)
+            .grid(row=0, column=0)
 
-        tk.Button(sub5, text = 'update', command=self.update2) \
-        .grid(row=0,column=1, padx=10, pady=5, sticky=tk.S)
+        tk.Button(sub5, text='update', command=self.update2) \
+            .grid(row=0, column=1, padx=10, pady=5, sticky=tk.S)
 
-        self.preset1()   
+        self.preset1()
+
 
 if __name__ == "__main__":
     Application().mainloop()
