@@ -21,37 +21,41 @@ def draw(scale, width, div, grad1, color1, color2, color3, lines, angle, pad, gr
     x = __draw2(x, lines)
     x = __draw3(x, angle)
     x = __draw4(x, scale, pad, grad2, color4, color5)
-    return x
+
+    return np.clip(x, 0, 255).astype(np.uint8)
 
 
-def __draw1(scale, width, div, grad_s, color1, color2, color3):
+def __draw1(scale, width, div, grad1, color1, color2, color3):
     width = width*scale
+    grad1 = (grad1*width) // 100
 
-    grad_s = (grad_s*width) // 100
+    x0 = np.zeros((1, width, 3), dtype=np.uint8)
+    x0[:] = color1
 
-    green_back = np.zeros((1, width, 3), dtype=np.uint8)
-    green_back[:] = color1
+    x1 = np.zeros((1, width, 3), dtype=np.uint8)
+    x1[:] = color2
 
-    white_back = np.zeros((1, width, 3), dtype=np.uint8)
-    white_back[:] = color2
+    one = np.ones((grad1,), dtype=np.float32)
+    one_to_zero = np.linspace(
+        1, 0, width-grad1, endpoint=False, dtype=np.float32)
+    one_to_zero = one_to_zero*one_to_zero * \
+        (3-2*one_to_zero)  # 3rd order interpolation
+    gradation = np.r_[one, one_to_zero]
+    gradation = gradation[None, :, None]
 
-    ones = np.ones((grad_s,), dtype=np.float32)
-    grad = np.linspace(1, 0, width-grad_s, endpoint=False, dtype=np.float32)
-    grad = grad*grad*(3-2*grad)  # 3rd order interpolation
-    grad = np.r_[ones, grad]
-    grad = grad[None, :, None]
-    x = green_back * (grad) + white_back * (1-grad)
+    x = x0 * gradation + x1 * (1-gradation)
 
     pos = np.arange(width)
-    mask2 = (pos // div)
-    mask1 = ((pos*div) % width)//div
+    mask_width = pos // div
 
-    mask2[mask2 < scale] = scale
-    mask2[(mask2 > mask2[-1]-scale) & (mask2 < mask2[-1])] = mask2[-1]-scale
+    mask_width[mask_width < scale] = scale
+    mask_width[(mask_width > mask_width[-1]-scale) &
+               (mask_width < mask_width[-1])] = mask_width[-1] - scale
 
-    mask = (mask1 <= mask2)
-
+    pos_in_segment = ((pos * div) % width) // div
+    mask = (pos_in_segment <= mask_width)
     x[:, mask, :] = color3
+
     return x
 
 
@@ -61,12 +65,6 @@ def __draw2(x, lines):
     pos = np.arange(width)
     mask = ((pos*lines) // width) % 2 == 0
 
-    # slow
-    # mask = mask[:, None, None]
-    # x=np.where(mask, x, x[:,::-1])
-    # return x
-
-    # fast
     xx = np.zeros((width, width, 3), dtype=np.float32)
     xx[mask] = x
     xx[~mask] = x[:, ::-1]
@@ -101,12 +99,12 @@ def __draw3(x, angle):
     return x
 
 
-def __draw4(x, scale, pad, grad_s, color3, color4):
+def __draw4(x, scale, pad, grad2, color3, color4):
     x_width = x.shape[1]
     pad = pad*scale
     width = x_width+pad*2
 
-    grad_s = (grad_s*width) // 100
+    grad2 = (grad2*width) // 100
 
     bk1 = np.zeros((width, width, 3), dtype=np.float32)
     bk1[:] = color3
@@ -114,21 +112,21 @@ def __draw4(x, scale, pad, grad_s, color3, color4):
     bk2 = np.zeros((width, width, 3), dtype=np.float32)
     bk2[:] = color4
 
-    ones = np.ones((grad_s,), dtype=np.float32)
-    grad = np.linspace(1, 0, width-grad_s, endpoint=False, dtype=np.float32)
-    grad = grad*grad*(3-2*grad)  # 3rd order interpolation
-    grad = np.r_[ones, grad]
+    one = np.ones((grad2,), dtype=np.float32)
+    one_to_zero = np.linspace(
+        1, 0, width-grad2, endpoint=False, dtype=np.float32)
+    one_to_zero = one_to_zero*one_to_zero * \
+        (3-2*one_to_zero)  # 3rd order interpolation
+    gradation = np.r_[one, one_to_zero]
 
-    grad = grad[None, :, None]
-    bk = bk1 * (grad) + bk2 * (1-grad)
+    gradation = gradation[None, :, None]
+    bk = bk1 * gradation + bk2 * (1-gradation)
 
     bk[pad:pad+x_width, pad:pad+x_width] = x[:, :, :3] * x[:, :, 3:4] + \
         bk[pad:pad+x_width, pad:pad+x_width]*(1-x[:, :, 3:4])
 
     if scale > 1:
-        #bk = cv2.GaussianBlur(bk, (scale,scale), 0, borderType=cv2.BORDER_REPLICATE)
-        #bk = bk[(scale-1)//2::scale, (scale-1)//2::scale]
         bk = cv2.resize(
             bk, (bk.shape[1]//scale, bk.shape[0]//scale), interpolation=cv2.INTER_AREA)
 
-    return np.clip(bk, 0, 255).astype(np.uint8)
+    return bk
